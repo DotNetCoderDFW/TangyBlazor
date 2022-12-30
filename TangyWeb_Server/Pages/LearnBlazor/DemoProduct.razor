@@ -1,32 +1,21 @@
 ﻿@page "/LearnBlazor/DemoProduct"
 
 <h2 class="text-primary">DemoProduct</h2>
+<p>Favorites Total : @SelectedFavoriteCount</p>
+<p>Last Selected Product : @LastSelectedProduct</p>
 <div class="row p-2" style="background-color: lightblue;">
     @foreach (var prod in Products)
     {
-        <div class="col-5 me-2" style="background-color: white;">
-            <h3>Product - @prod.Id</h3>
-            <div>
-                Name - @prod.Name<br />
-                Show Properties : <input type="checkbox" @bind-value="@prod.IsActive" checked="@(prod.IsActive?"checked":null)"/><br />
-                @if (prod.IsActive)
-                {
-                    foreach (var prop in prod.ProductProperties)
-                    {
-                        <div class="pb-3">@prop.Key - @prop.Value</div>
-                    }
-                }
-            </div>
-            <div class="pt-4">
-                <button class="btn btn-danger">Delete</button> 
-                <button class="btn btn-success">Edit</button>
-            </div>
-        </div>
+        <_IndividualProduct Product="prod" OnFavoriteSelection="FavoriteCountUpdate" OnLastProductSelectionChanged="UpdateSelectedProduct">
+        </_IndividualProduct>
     }
 </div>
 
 @code {
     List<Demo_Product> Products = new();
+    private int SelectedFavoriteCount { get; set; } = 0;
+    private string LastSelectedProduct { get; set; } = String.Empty;
+
 
     protected override void OnInitialized()
     {
@@ -38,9 +27,9 @@
             Price = 10.99,
             ProductProperties = new()
             {
-                new Demo_ProductProp { Id = 1, Key = "Flavor", Value = "Rose"},
-                new Demo_ProductProp { Id = 2, Key = "Size", Value = "20oz"},
-                new Demo_ProductProp { Id = 3, Key = "Color", Value="Purple" }
+                new Demo_ProductProp { Id = 1, Key = "Flavor", Value = "Rose" },
+                new Demo_ProductProp { Id = 2, Key = "Size", Value = "20oz" },
+                new Demo_ProductProp { Id = 3, Key = "Color", Value = "Purple" }
             }
         });
 
@@ -54,9 +43,19 @@
             {
                 new Demo_ProductProp { Id = 1, Key = "Flavor", Value = "Lily" },
                 new Demo_ProductProp { Id = 2, Key = "Size", Value = "18oz" },
-                new Demo_ProductProp {Id = 3,Key = "Color",Value = "White"}
+                new Demo_ProductProp { Id = 3, Key = "Color", Value = "White" }
             }
         });
     }
 
+    private void FavoriteCountUpdate(bool isSelected)
+    {
+        if (isSelected) SelectedFavoriteCount++;
+        else SelectedFavoriteCount--;
+    }
+
+    private void UpdateSelectedProduct(string productName)
+    {
+        LastSelectedProduct = productName;
+    }
 }
