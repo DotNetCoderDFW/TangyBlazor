@@ -3,6 +3,7 @@
     <div>
         <input type="checkbox" @onchange="FavoriteUpdated" /> Add to Favorite<br /><br />
         Name - @Product.Name<br/>
+        RF from Parent - @FirstFragment @SecondFragment<br /><br />
         Show Properties : <input type="checkbox" @bind-value="@Product.IsActive" checked="@(Product.IsActive ? "checked" : null)"/><br/>
         @if (Product.IsActive)
         {
@@ -21,7 +22,11 @@
 @code {
     [Parameter]
     public Demo_Product Product { get; set; }
-    
+    [Parameter]
+    public RenderFragment FirstFragment { get; set; }
+    [Parameter]
+    public RenderFragment SecondFragment { get; set; }
+
     [Parameter]
     public EventCallback<bool> OnFavoriteSelection { get; set; }
     [Parameter]
